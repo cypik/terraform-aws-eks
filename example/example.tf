@@ -8,9 +8,7 @@ locals {
   region                = "eu-west-1"
   vpc_cidr_block        = module.vpc.vpc_cidr_block
   additional_cidr_block = "172.16.0.0/16"
-  tags = {
-    "kubernetes.io/cluster/${module.eks.cluster_name}" = "owned"
-  }
+
 }
 
 module "vpc" {

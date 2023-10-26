@@ -224,30 +224,12 @@ variable "endpoint_public_access" {
   description = "Indicates whether or not the Amazon EKS public API server endpoint is enabled. Default to AWS EKS resource and it is true."
 }
 
-variable "vpc_security_group_ids" {
-  type        = list(string)
-  default     = []
-  description = "A list of security group IDs to associate"
-}
 #-----------------------------------------------TimeOuts----------------------------------------------------------------
 
 variable "cluster_timeouts" {
   description = "Create, update, and delete timeout configurations for the cluster"
   type        = map(string)
   default     = {}
-}
-
-
-variable "self_node_groups" {
-  type        = any
-  default     = {}
-  description = "Map of self-managed node group definitions to create"
-}
-
-variable "self_node_group_defaults" {
-  type        = any
-  default     = {}
-  description = "Map of self-managed node group default configurations"
 }
 
 # AWS auth
@@ -312,28 +294,9 @@ variable "managed_node_group" {
 
 #-----------------------------------------------ASG-Schedule----------------------------------------------------------------
 
-variable "create_schedule" {
-  description = "Determines whether to create autoscaling group schedule or not"
-  type        = bool
-  default     = true
-}
 
 variable "schedules" {
   description = "Map of autoscaling group schedule to create"
   type        = map(any)
   default     = {}
-}
-
-##fargate profile
-
-variable "fargate_enabled" {
-  type        = bool
-  default     = false
-  description = "Whether fargate profile is enabled or not"
-}
-
-variable "fargate_profiles" {
-  type        = map(any)
-  default     = {}
-  description = "The number of Fargate Profiles that would be created."
 }

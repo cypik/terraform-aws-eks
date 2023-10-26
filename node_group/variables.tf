@@ -85,18 +85,6 @@ variable "vpc_security_group_ids" {
   default     = []
 }
 
-variable "launch_template_default_version" {
-  description = "Default version of the launch template"
-  type        = string
-  default     = null
-}
-
-variable "update_launch_template_default_version" {
-  description = "Whether to update the launch templates default version on each update. Conflicts with `launch_template_default_version`"
-  type        = bool
-  default     = true
-}
-
 variable "disable_api_termination" {
   description = "If true, enables EC2 instance termination protection"
   type        = bool
@@ -157,12 +145,6 @@ variable "enclave_options" {
   default     = null
 }
 
-variable "instance_market_options" {
-  description = "The market (purchasing) option for the instance"
-  type        = any
-  default     = null
-}
-
 variable "license_specifications" {
   description = "A list of license specifications to associate with"
   type        = map(string)
@@ -202,12 +184,6 @@ variable "placement" {
   description = "The placement of the instance"
   type        = map(string)
   default     = null
-}
-
-variable "launch_template_tags" {
-  description = "A map of additional tags to add to the tag_specifications of launch template created"
-  type        = map(string)
-  default     = {}
 }
 
 #EKS_Managed_Node_Group
