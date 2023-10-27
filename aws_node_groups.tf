@@ -46,17 +46,14 @@ module "eks_managed_node_group" {
 
   # Launch Template
   launch_template_description = try(each.value.launch_template_description, var.managed_node_group_defaults.launch_template_description, "Custom launch template for ${try(each.value.name, each.key)} EKS managed node group")
-  launch_template_tags        = try(each.value.launch_template_tags, var.managed_node_group_defaults.launch_template_tags, {})
 
   ebs_optimized = try(each.value.ebs_optimized, var.managed_node_group_defaults.ebs_optimized, null)
   key_name      = try(each.value.key_name, var.managed_node_group_defaults.key_name, null)
   kms_key_id    = try(each.value.kms_key_id, var.managed_node_group_defaults.ebs_optimized, null)
 
-  launch_template_default_version        = try(each.value.launch_template_default_version, var.managed_node_group_defaults.launch_template_default_version, null)
-  update_launch_template_default_version = try(each.value.update_launch_template_default_version, var.managed_node_group_defaults.update_launch_template_default_version, true)
-  disable_api_termination                = try(each.value.disable_api_termination, var.managed_node_group_defaults.disable_api_termination, null)
-  kernel_id                              = try(each.value.kernel_id, var.managed_node_group_defaults.kernel_id, null)
-  ram_disk_id                            = try(each.value.ram_disk_id, var.managed_node_group_defaults.ram_disk_id, null)
+  disable_api_termination = try(each.value.disable_api_termination, var.managed_node_group_defaults.disable_api_termination, null)
+  kernel_id               = try(each.value.kernel_id, var.managed_node_group_defaults.kernel_id, null)
+  ram_disk_id             = try(each.value.ram_disk_id, var.managed_node_group_defaults.ram_disk_id, null)
 
   block_device_mappings              = try(each.value.block_device_mappings, var.managed_node_group_defaults.block_device_mappings, {})
   capacity_reservation_specification = try(each.value.capacity_reservation_specification, var.managed_node_group_defaults.capacity_reservation_specification, null)

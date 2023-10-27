@@ -27,7 +27,7 @@ module "subnets" {
   nat_gateway_enabled = true
   single_nat_gateway  = true
   availability_zones  = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  vpc_id              = module.vpc.vpc_id
+  vpc_id              = module.vpc.id
   type                = "public-private"
   igw_id              = module.vpc.igw_id
   cidr_block          = local.vpc_cidr_block
@@ -41,7 +41,7 @@ module "ssh" {
 
   name        = "${local.name}-ssh"
   environment = local.environment
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = module.vpc.id
   new_sg_ingress_rules_with_cidr_blocks = [{
     rule_count  = 1
     from_port   = 22
@@ -69,7 +69,7 @@ module "http_https" {
   name        = "${local.name}-http-https"
   environment = local.environment
 
-  vpc_id = module.vpc.vpc_id
+  vpc_id = module.vpc.id
   ## INGRESS Rules
   new_sg_ingress_rules_with_cidr_blocks = [
     {
@@ -142,7 +142,7 @@ module "eks" {
   kubernetes_version     = "1.27"
   endpoint_public_access = true
   # Networking
-  vpc_id                            = module.vpc.vpc_id
+  vpc_id                            = module.vpc.id
   subnet_ids                        = module.subnets.private_subnet_id
   allowed_security_groups           = [module.ssh.security_group_id]
   eks_additional_security_group_ids = ["${module.ssh.security_group_id}", "${module.http_https.security_group_id}"]
