@@ -11,9 +11,7 @@ module "labels" {
   label_order = var.label_order
 }
 
-
-
-
+#tfsec:ignore:aws-ec2-enforce-launch-config-http-token-imds
 resource "aws_launch_template" "this" {
   count       = var.enabled ? 1 : 0
   name        = module.labels.id

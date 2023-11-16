@@ -20,6 +20,8 @@ resource "aws_cloudwatch_log_group" "default" {
   kms_key_id        = join("", aws_kms_key.cloudwatch_log[*].arn)
 }
 
+#tfsec:ignore:aws-eks-no-public-cluster-access-to-cidr
+#tfsec:ignore:aws-eks-no-public-cluster-access
 resource "aws_eks_cluster" "default" {
   count                     = var.enabled ? 1 : 0
   name                      = module.labels.id

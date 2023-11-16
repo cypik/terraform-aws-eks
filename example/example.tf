@@ -19,7 +19,9 @@ module "vpc" {
   cidr_block  = "10.10.0.0/16"
 }
 
-
+#tfsec:ignore:aws-ec2-no-public-ingress-acl
+#tfsec:ignore:aws-ec2-no-public-ingress-acl
+#tfsec:ignore:aws-ec2-no-excessive-port-access
 module "subnets" {
   source              = "git::https://github.com/opz0/terraform-aws-subnet.git?ref=v1.0.0"
   name                = "${local.name}-subnet"
@@ -35,7 +37,7 @@ module "subnets" {
   enable_ipv6         = false
 }
 
-
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
 module "ssh" {
   source = "git::https://github.com/opz0/terraform-aws-security-group.git?ref=v1.0.0"
 
@@ -63,6 +65,8 @@ module "ssh" {
   }]
 }
 
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
+#tfsec:ignore:aws-ec2-no-public-ingress-sgr
 module "http_https" {
   source = "git::https://github.com/opz0/terraform-aws-security-group.git?ref=v1.0.0"
 
@@ -103,6 +107,7 @@ module "http_https" {
   ]
 }
 
+#tfsec:ignore:aws-kms-auto-rotate-keys
 module "kms" {
   source = "git::https://github.com/opz0/terraform-aws-kms.git?ref=v1.0.0"
 

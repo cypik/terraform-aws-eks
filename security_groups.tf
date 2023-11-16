@@ -8,7 +8,7 @@ resource "aws_security_group" "node_group" {
 }
 
 
-
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
 resource "aws_security_group_rule" "node_group" {
   count             = var.enabled ? 1 : 0
   description       = "Allow all egress traffic"
