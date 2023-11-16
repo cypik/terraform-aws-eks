@@ -5,7 +5,7 @@ locals {
 
   map_worker_roles = [
     {
-      rolearn : join("", aws_iam_role.node_groups.*.arn)
+      rolearn : join("", aws_iam_role.node_groups[*].arn)
       username : "system:node:{{EC2PrivateDNSName}}"
       groups : [
         "system:bootstrappers",
@@ -30,18 +30,18 @@ resource "null_resource" "wait_for_cluster" {
 
 data "aws_eks_cluster" "eks" {
   count = var.enabled && var.apply_config_map_aws_auth ? 1 : 0
-  name  = join("", aws_eks_cluster.default.*.id)
+  name  = join("", aws_eks_cluster.default[*].id)
 }
 
 data "aws_eks_cluster_auth" "eks" {
   count = var.enabled && var.apply_config_map_aws_auth ? 1 : 0
-  name  = join("", aws_eks_cluster.default.*.id)
+  name  = join("", aws_eks_cluster.default[*].id)
 }
 
 provider "kubernetes" {
-  token                  = join("", data.aws_eks_cluster_auth.eks.*.token)
-  host                   = join("", data.aws_eks_cluster.eks.*.endpoint)
-  cluster_ca_certificate = base64decode(join("", data.aws_eks_cluster.eks.*.certificate_authority.0.data))
+  token                  = join("", data.aws_eks_cluster_auth.eks[*].token)
+  host                   = join("", data.aws_eks_cluster.eks[*].endpoint)
+  cluster_ca_certificate = base64decode(join("", data.aws_eks_cluster.eks[*].certificate_authority[*].data))
 }
 
 resource "kubernetes_config_map" "aws_auth_ignore_changes" {

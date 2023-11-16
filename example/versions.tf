@@ -11,5 +11,9 @@ terraform {
       source  = "hashicorp/cloudinit"
       version = ">= 2.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 1.10.0, < 2.0.0"
+    }
   }
 }
