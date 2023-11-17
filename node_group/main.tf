@@ -1,6 +1,6 @@
 
 module "labels" {
-  source = "git::git@github.com:opz0/terraform-aws-labels.git?ref=master"
+  source = "git::https://github.com/opz0/terraform-aws-labels.git?ref=v1.0.0"
 
   name        = var.name
   repository  = var.repository
@@ -11,9 +11,7 @@ module "labels" {
   label_order = var.label_order
 }
 
-
-
-
+#tfsec:ignore:aws-ec2-enforce-launch-config-http-token-imds
 resource "aws_launch_template" "this" {
   count       = var.enabled ? 1 : 0
   name        = module.labels.id

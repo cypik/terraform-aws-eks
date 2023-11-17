@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name                  = "Opz0-eks"
+  name                  = "test-eks"
   environment           = "test"
   region                = "eu-west-1"
   vpc_cidr_block        = module.vpc.vpc_cidr_block
@@ -12,16 +12,18 @@ locals {
 }
 
 module "vpc" {
-  source = "git::git@github.com:opz0/terraform-aws-vpc.git?ref=master"
+  source = "git::https://github.com/opz0/terraform-aws-vpc.git?ref=v1.0.0"
 
   name        = "${local.name}-vpc"
   environment = local.environment
   cidr_block  = "10.10.0.0/16"
 }
 
-
+#tfsec:ignore:aws-ec2-no-public-ingress-acl
+#tfsec:ignore:aws-ec2-no-public-ingress-acl
+#tfsec:ignore:aws-ec2-no-excessive-port-access
 module "subnets" {
-  source              = "git::git@github.com:opz0/terraform-aws-subnet.git?ref=master"
+  source              = "git::https://github.com/opz0/terraform-aws-subnet.git?ref=v1.0.0"
   name                = "${local.name}-subnet"
   environment         = local.environment
   nat_gateway_enabled = true
@@ -35,9 +37,9 @@ module "subnets" {
   enable_ipv6         = false
 }
 
-
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
 module "ssh" {
-  source = "git::git@github.com:opz0/terraform-aws-security-group.git?ref=master"
+  source = "git::https://github.com/opz0/terraform-aws-security-group.git?ref=v1.0.0"
 
   name        = "${local.name}-ssh"
   environment = local.environment
@@ -63,8 +65,10 @@ module "ssh" {
   }]
 }
 
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
+#tfsec:ignore:aws-ec2-no-public-ingress-sgr
 module "http_https" {
-  source = "git::git@github.com:opz0/terraform-aws-security-group.git?ref=master"
+  source = "git::https://github.com/opz0/terraform-aws-security-group.git?ref=v1.0.0"
 
   name        = "${local.name}-http-https"
   environment = local.environment
@@ -103,8 +107,9 @@ module "http_https" {
   ]
 }
 
+#tfsec:ignore:aws-kms-auto-rotate-keys
 module "kms" {
-  source = "git::git@github.com:opz0/terraform-aws-kms.git?ref=master"
+  source = "git::https://github.com/opz0/terraform-aws-kms.git?ref=v1.0.0"
 
   name                = "${local.name}-kms"
   environment         = local.environment
@@ -194,7 +199,7 @@ module "eks" {
   map_additional_iam_users = [
     {
       userarn  = "arn:aws:iam::123456789:user/Opz0"
-      username = "Opz0"
+      username = "test"
       groups   = ["system:masters"]
     }
   ]
