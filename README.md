@@ -79,7 +79,7 @@ module "eks" {
   apply_config_map_aws_auth = true
   map_additional_iam_users = [
     {
-      userarn  = "arn:aws:iam::123456789:user/Opz0"
+      userarn  = "arn:aws:iam::123456789:user/cypik"
       username = "test"
       groups   = ["system:masters"]
     }
