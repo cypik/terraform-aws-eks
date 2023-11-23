@@ -12,7 +12,7 @@ locals {
 }
 
 module "vpc" {
-  source = "git::https://github.com/opz0/terraform-aws-vpc.git?ref=v1.0.0"
+  source = "git::https://github.com/cypik/terraform-aws-vpc.git?ref=v1.0.0"
 
   name        = "${local.name}-vpc"
   environment = local.environment
@@ -23,7 +23,7 @@ module "vpc" {
 #tfsec:ignore:aws-ec2-no-public-ingress-acl
 #tfsec:ignore:aws-ec2-no-excessive-port-access
 module "subnets" {
-  source              = "git::https://github.com/opz0/terraform-aws-subnet.git?ref=v1.0.0"
+  source              = "git::https://github.com/cypik/terraform-aws-subnet.git?ref=v1.0.0"
   name                = "${local.name}-subnet"
   environment         = local.environment
   nat_gateway_enabled = true
@@ -39,7 +39,7 @@ module "subnets" {
 
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
 module "ssh" {
-  source = "git::https://github.com/opz0/terraform-aws-security-group.git?ref=v1.0.0"
+  source = "git::https://github.com/cypik/terraform-aws-security-group.git?ref=v1.0.0"
 
   name        = "${local.name}-ssh"
   environment = local.environment
@@ -68,7 +68,7 @@ module "ssh" {
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
 #tfsec:ignore:aws-ec2-no-public-ingress-sgr
 module "http_https" {
-  source = "git::https://github.com/opz0/terraform-aws-security-group.git?ref=v1.0.0"
+  source = "git::https://github.com/cypik/terraform-aws-security-group.git?ref=v1.0.0"
 
   name        = "${local.name}-http-https"
   environment = local.environment
@@ -109,7 +109,7 @@ module "http_https" {
 
 #tfsec:ignore:aws-kms-auto-rotate-keys
 module "kms" {
-  source = "git::https://github.com/opz0/terraform-aws-kms.git?ref=v1.0.0"
+  source = "git::https://github.com/cypik/terraform-aws-kms.git?ref=v1.0.0"
 
   name                = "${local.name}-kms"
   environment         = local.environment
@@ -198,7 +198,7 @@ module "eks" {
   apply_config_map_aws_auth = true
   map_additional_iam_users = [
     {
-      userarn  = "arn:aws:iam::123456789:user/Opz0"
+      userarn  = "arn:aws:iam::123456789:user/cypik"
       username = "test"
       groups   = ["system:masters"]
     }
