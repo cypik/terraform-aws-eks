@@ -101,7 +101,7 @@ For security group settings, you can configure the ingress and egress rules usin
 - Other relevant security group outputs (modify as needed).
 
 ## Example
-For detailed examples on how to use this module, please refer to the 'example' directory within this repository.
+For detailed examples on how to use this module, please refer to the [example](https://github.com/cypik/terraform-aws-eks/blob/master/example/example.tf) directory within this repository.
 
 ## Author
 Your Name Replace '[License Name]' and '[Your Name]' with the appropriate license and your information. Feel free to expand this README with additional details or usage instructions as needed for your specific use case.
