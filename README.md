@@ -18,7 +18,7 @@ To use this module, you can include it in your Terraform configuration. Here's a
 
 ```hcl
 module "eks" {
-  source  = "git::https://github.com/opz0/terraform-aws-eks.git?ref=v1.0.0"
+  source  = "git::https://github.com/cypik/terraform-aws-eks.git?ref=v1.0.0"
   enabled = true
 
   name        = local.name
@@ -107,4 +107,4 @@ For detailed examples on how to use this module, please refer to the 'example' d
 Your Name Replace '[License Name]' and '[Your Name]' with the appropriate license and your information. Feel free to expand this README with additional details or usage instructions as needed for your specific use case.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/opz0/terraform-aws-eks/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/cypik/terraform-aws-eks/blob/master/LICENSE) file for details.
