@@ -150,7 +150,7 @@ module "eks" {
   vpc_id                            = module.vpc.id
   subnet_ids                        = module.subnets.private_subnet_id
   allowed_security_groups           = [module.ssh.security_group_id]
-  eks_additional_security_group_ids = ["${module.ssh.security_group_id}", "${module.http_https.security_group_id}"]
+  eks_additional_security_group_ids = [module.ssh.security_group_id, module.http_https.security_group_id]
   allowed_cidr_blocks               = [local.vpc_cidr_block]
 
   managed_node_group_defaults = {
