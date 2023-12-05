@@ -98,8 +98,7 @@ resource "aws_iam_openid_connect_provider" "default" {
 }
 
 resource "aws_eks_addon" "cluster" {
-  for_each = var.enabled ? { for addon in var.addons : addon.addon_name => addon } : {}
-
+  for_each                    = { for k, v in var.addons : k => v if var.enabled }
   cluster_name                = join("", aws_eks_cluster.default[*].name)
   addon_name                  = each.key
   addon_version               = lookup(each.value, "addon_version", null)
