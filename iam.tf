@@ -150,7 +150,26 @@ data "aws_iam_policy_document" "amazon_eks_node_group_autoscaler_policy" {
       "autoscaling:TerminateInstanceInAutoScalingGroup",
       "autoscaling:TerminateInstanceInAutoScalingGroup",
       "ec2:DescribeLaunchTemplateVersions",
-      "ecr:*"
+      "ecr:*",
+      "elasticloadbalancing:DescribeLoadBalancers",
+      "elasticloadbalancing:DescribeLoadBalancerAttributes",
+      "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:DescribeListenerCertificates",
+      "elasticloadbalancing:DescribeSSLPolicies",
+      "elasticloadbalancing:DescribeRules",
+      "elasticloadbalancing:DescribeTargetGroups",
+      "elasticloadbalancing:DescribeTargetGroupAttributes",
+      "elasticloadbalancing:DescribeTargetHealth",
+      "elasticloadbalancing:DescribeTags",
+      "cognito-idp:DescribeUserPoolClient",
+      "acm:ListCertificates",
+      "acm:DescribeCertificate",
+      "iam:ListServerCertificates",
+      "iam:GetServerCertificate",
+      "ec2:AuthorizeSecurityGroupIngress",
+      "ec2:RevokeSecurityGroupIngress",
+      "ec2:CreateSecurityGroup"
+
     ]
     resources = ["*"]
   }
