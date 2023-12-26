@@ -39,8 +39,7 @@ module "subnets" {
 
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
 module "ssh" {
-  source = "git::https://github.com/cypik/terraform-aws-security-group.git?ref=v1.0.0"
-
+  source      = "git::https://github.com/cypik/terraform-aws-security-group.git?ref=v1.0.0"
   name        = "${local.name}-ssh"
   environment = local.environment
   vpc_id      = module.vpc.id
@@ -68,12 +67,10 @@ module "ssh" {
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
 #tfsec:ignore:aws-ec2-no-public-ingress-sgr
 module "http_https" {
-  source = "git::https://github.com/cypik/terraform-aws-security-group.git?ref=v1.0.0"
-
+  source      = "git::https://github.com/cypik/terraform-aws-security-group.git?ref=v1.0.0"
   name        = "${local.name}-http-https"
   environment = local.environment
-
-  vpc_id = module.vpc.id
+  vpc_id      = module.vpc.id
   ## INGRESS Rules
   new_sg_ingress_rules_with_cidr_blocks = [
     {
@@ -109,8 +106,7 @@ module "http_https" {
 
 #tfsec:ignore:aws-kms-auto-rotate-keys
 module "kms" {
-  source = "git::https://github.com/cypik/terraform-aws-kms.git?ref=v1.0.0"
-
+  source              = "git::https://github.com/cypik/terraform-aws-kms.git?ref=v1.0.0"
   name                = "${local.name}-kms"
   environment         = local.environment
   enabled             = true
@@ -137,14 +133,13 @@ data "aws_caller_identity" "current" {}
 
 
 module "eks" {
-  source  = "../"
-  enabled = true
-
+  source      = "../"
+  enabled     = true
   name        = local.name
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.27"
+  kubernetes_version     = "1.28"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
