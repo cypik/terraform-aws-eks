@@ -1,4 +1,3 @@
-
 module "labels" {
   source = "git::https://github.com/cypik/terraform-aws-labels.git?ref=v1.0.0"
 
@@ -14,7 +13,7 @@ module "labels" {
 #tfsec:ignore:aws-ec2-enforce-launch-config-http-token-imds
 resource "aws_launch_template" "this" {
   count       = var.enabled ? 1 : 0
-  name        = module.labels.id
+  name        = format("%s-%s", module.labels.name, "nodes")
   description = var.launch_template_description
 
   ebs_optimized = var.ebs_optimized
@@ -192,7 +191,7 @@ resource "aws_eks_node_group" "this" {
   }
 
   # Optional
-  node_group_name = module.labels.id
+  node_group_name = format("%s-%s", module.labels.name, "nodes")
 
   ami_type        = var.ami_id != "" ? null : var.ami_type
   release_version = var.ami_id != "" ? null : var.ami_release_version
