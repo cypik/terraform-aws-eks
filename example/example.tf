@@ -12,18 +12,16 @@ locals {
 }
 
 module "vpc" {
-  source = "git::https://github.com/cypik/terraform-aws-vpc.git?ref=v1.0.0"
-
+  source      = "cypik/vpc/aws"
+  version     = "1.0.1"
   name        = "${local.name}-vpc"
   environment = local.environment
   cidr_block  = "10.10.0.0/16"
 }
 
-#tfsec:ignore:aws-ec2-no-public-ingress-acl
-#tfsec:ignore:aws-ec2-no-public-ingress-acl
-#tfsec:ignore:aws-ec2-no-excessive-port-access
 module "subnets" {
-  source              = "git::https://github.com/cypik/terraform-aws-subnet.git?ref=v1.0.0"
+  source              = "cypik/subnet/aws"
+  version             = "1.0.1"
   name                = "${local.name}-subnet"
   environment         = local.environment
   nat_gateway_enabled = true
@@ -37,9 +35,9 @@ module "subnets" {
   enable_ipv6         = false
 }
 
-#tfsec:ignore:aws-ec2-no-public-egress-sgr
 module "ssh" {
-  source      = "git::https://github.com/cypik/terraform-aws-security-group.git?ref=v1.0.0"
+  source      = "cypik/security-group/aws"
+  version     = "1.0.1"
   name        = "${local.name}-ssh"
   environment = local.environment
   vpc_id      = module.vpc.id
@@ -64,10 +62,9 @@ module "ssh" {
   }]
 }
 
-#tfsec:ignore:aws-ec2-no-public-egress-sgr
-#tfsec:ignore:aws-ec2-no-public-ingress-sgr
 module "http_https" {
-  source      = "git::https://github.com/cypik/terraform-aws-security-group.git?ref=v1.0.0"
+  source      = "cypik/security-group/aws"
+  version     = "1.0.1"
   name        = "${local.name}-http-https"
   environment = local.environment
   vpc_id      = module.vpc.id
@@ -104,9 +101,9 @@ module "http_https" {
   ]
 }
 
-#tfsec:ignore:aws-kms-auto-rotate-keys
 module "kms" {
-  source              = "git::https://github.com/cypik/terraform-aws-kms.git?ref=v1.0.0"
+  source              = "cypik/kms/aws"
+  version             = "1.0.1"
   name                = "${local.name}-kms"
   environment         = local.environment
   enabled             = true
