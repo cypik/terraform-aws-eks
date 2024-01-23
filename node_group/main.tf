@@ -1,6 +1,6 @@
 module "labels" {
-  source = "git::https://github.com/cypik/terraform-aws-labels.git?ref=v1.0.0"
-
+  source      = "cypik/labels/aws"
+  version     = "1.0.1"
   name        = var.name
   repository  = var.repository
   environment = var.environment
@@ -10,7 +10,6 @@ module "labels" {
   label_order = var.label_order
 }
 
-#tfsec:ignore:aws-ec2-enforce-launch-config-http-token-imds
 resource "aws_launch_template" "this" {
   count       = var.enabled ? 1 : 0
   name        = format("%s-%s", module.labels.name, "nodes")
