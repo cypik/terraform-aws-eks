@@ -31,8 +31,15 @@ module "subnets" {
   type                = "public-private"
   igw_id              = module.vpc.igw_id
   cidr_block          = local.vpc_cidr_block
-  ipv6_cidr_block     = module.vpc.ipv6_cidr_block
-  enable_ipv6         = false
+  extra_public_tags = {
+    "kubernetes.io/cluster/${module.eks.cluster_name}" = "shared"
+    "kubernetes.io/role/elb"                           = "1"
+  }
+
+  extra_private_tags = {
+    "kubernetes.io/cluster/${module.eks.cluster_name}" = "shared"
+    "kubernetes.io/role/internal-elb"                  = "1"
+  }
 }
 
 module "ssh" {
