@@ -1,5 +1,3 @@
-
-
 module "labels" {
   source      = "cypik/labels/aws"
   version     = "1.0.1"

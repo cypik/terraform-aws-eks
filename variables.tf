@@ -94,17 +94,17 @@ variable "addons" {
   default = [
     {
       addon_name        = "coredns"
-      addon_version     = "v1.10.1-eksbuild.2"
+      addon_version     = "v1.11.1-eksbuild.4"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "kube-proxy"
-      addon_version     = "v1.28.1-eksbuild.1"
+      addon_version     = "v1.29.0-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "vpc-cni"
-      addon_version     = "v1.14.1-eksbuild.1"
+      addon_version     = "v1.16.0-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
   ]
@@ -299,4 +299,18 @@ variable "schedules" {
   description = "Map of autoscaling group schedule to create"
   type        = map(any)
   default     = {}
+}
+
+##fargate profile
+
+variable "fargate_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether fargate profile is enabled or not"
+}
+
+variable "fargate_profiles" {
+  type        = map(any)
+  default     = {}
+  description = "The number of Fargate Profiles that would be created."
 }
