@@ -21,13 +21,13 @@ To use this module, you can include it in your Terraform configuration. Here's a
 ```hcl
 module "eks" {
   source      = "cypik/eks/aws"
-  version     = "1.0.3"
+  version     = "1.0.4"
   enabled     = true
   name        = local.name
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.27"
+  kubernetes_version     = "1.29"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -89,6 +89,97 @@ module "eks" {
 }
 ```
 
+```hcl
+## eks with fargate
+module "eks" {
+  source      = "cypik/eks/aws"
+  version     = "1.0.4"
+  enabled     = true
+  name        = local.name
+  environment = local.environment
+
+  # EKS
+  kubernetes_version     = "1.29"
+  endpoint_public_access = true
+  # Networking
+  vpc_id                            = module.vpc.id
+  subnet_ids                        = module.subnets.private_subnet_id
+  allowed_security_groups           = [module.ssh.security_group_id]
+  eks_additional_security_group_ids = [module.ssh.security_group_id, module.http_https.security_group_id]
+  allowed_cidr_blocks               = [local.vpc_cidr_block]
+
+  managed_node_group_defaults = {
+    subnet_ids                          = module.subnets.private_subnet_id
+    nodes_additional_security_group_ids = [module.ssh.security_group_id]
+    tags = {
+      "kubernetes.io/cluster/${module.eks.cluster_name}" = "shared"
+      "k8s.io/cluster/${module.eks.cluster_name}"        = "shared"
+    }
+    block_device_mappings = {
+      xvda = {
+        device_name = "/dev/xvda"
+        ebs = {
+          volume_size = 50
+          volume_type = "gp3"
+          iops        = 3000
+          throughput  = 150
+          encrypted   = true
+          kms_key_id  = module.kms.key_arn
+        }
+      }
+    }
+  }
+  managed_node_group = {
+    critical = {
+      name           = "${module.eks.cluster_name}-critical-node"
+      capacity_type  = "ON_DEMAND"
+      min_size       = 1
+      max_size       = 2
+      desired_size   = 1
+      instance_types = ["t3.medium"]
+    }
+
+    application = {
+      name                 = "${module.eks.cluster_name}-application"
+      capacity_type        = "SPOT"
+      min_size             = 1
+      max_size             = 2
+      desired_size         = 1
+      force_update_version = true
+      instance_types       = ["t3.medium"]
+    }
+  }
+
+  apply_config_map_aws_auth = true
+  map_additional_iam_users = [
+    {
+      userarn  = "arn:aws:iam::123456789:user/cypik"
+      username = "test"
+      groups   = ["system:masters"]
+    }
+  ]
+
+
+  ###fargate profile
+  fargate_enabled = true
+  fargate_profiles = {
+    profile-0 = {
+      profile_name = "default"
+      namespace    = "kube-system"
+    }
+  }
+}
+  apply_config_map_aws_auth = true
+  map_additional_iam_users = [
+    {
+      userarn  = "arn:aws:iam::123456789:user/cypik"
+      username = "test"
+      groups   = ["system:masters"]
+    }
+  ]
+}
+```
+
 ## Example
 For detailed examples on how to use this module, please refer to the [Examples](https://github.com/cypik/terraform-aws-eks/blob/master/example) directory within this repository.
 
@@ -123,7 +214,8 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_eks_managed_node_group"></a> [eks\_managed\_node\_group](#module\_eks\_managed\_node\_group) | ./node_group/ | n/a |
+| <a name="module_eks_managed_node_group"></a> [eks\_managed\_node\_group](#module\_eks\_managed\_node\_group) | ./node_group/aws_managed | n/a |
+| <a name="module_fargate"></a> [fargate](#module\_fargate) | ./node_group/fargate_profile | n/a |
 | <a name="module_labels"></a> [labels](#module\_labels) | cypik/labels/aws | 1.0.1 |
 
 ## Resources
@@ -173,7 +265,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_addons"></a> [addons](#input\_addons) | Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources. | `list(any)` | <pre>[<br>  {<br>    "addon_name": "coredns",<br>    "addon_version": "v1.10.1-eksbuild.2",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "kube-proxy",<br>    "addon_version": "v1.28.1-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "vpc-cni",<br>    "addon_version": "v1.14.1-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  }<br>]</pre> | no |
+| <a name="input_addons"></a> [addons](#input\_addons) | Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources. | `list(any)` | <pre>[<br>  {<br>    "addon_name": "coredns",<br>    "addon_version": "v1.11.1-eksbuild.4",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "kube-proxy",<br>    "addon_version": "v1.29.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "vpc-cni",<br>    "addon_version": "v1.16.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  }<br>]</pre> | no |
 | <a name="input_allowed_cidr_blocks"></a> [allowed\_cidr\_blocks](#input\_allowed\_cidr\_blocks) | List of CIDR blocks to be allowed to connect to the EKS cluster. | `list(string)` | `[]` | no |
 | <a name="input_allowed_security_groups"></a> [allowed\_security\_groups](#input\_allowed\_security\_groups) | List of Security Group IDs to be allowed to connect to the EKS cluster. | `list(string)` | `[]` | no |
 | <a name="input_apply_config_map_aws_auth"></a> [apply\_config\_map\_aws\_auth](#input\_apply\_config\_map\_aws\_auth) | Whether to generate local files from `kubeconfig` and `config_map_aws_auth` and perform `kubectl apply` to apply the ConfigMap to allow the worker nodes to join the EKS cluster. | `bool` | `true` | no |
@@ -194,6 +286,8 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="input_endpoint_private_access"></a> [endpoint\_private\_access](#input\_endpoint\_private\_access) | Indicates whether or not the Amazon EKS private API server endpoint is enabled. Default to AWS EKS resource and it is false. | `bool` | `true` | no |
 | <a name="input_endpoint_public_access"></a> [endpoint\_public\_access](#input\_endpoint\_public\_access) | Indicates whether or not the Amazon EKS public API server endpoint is enabled. Default to AWS EKS resource and it is true. | `bool` | `true` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| <a name="input_fargate_enabled"></a> [fargate\_enabled](#input\_fargate\_enabled) | Whether fargate profile is enabled or not | `bool` | `false` | no |
+| <a name="input_fargate_profiles"></a> [fargate\_profiles](#input\_fargate\_profiles) | The number of Fargate Profiles that would be created. | `map(any)` | `{}` | no |
 | <a name="input_iam_role_additional_policies"></a> [iam\_role\_additional\_policies](#input\_iam\_role\_additional\_policies) | Additional policies to be added to the IAM role | `map(string)` | `{}` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | Desired Kubernetes master version. If you do not specify a value, the latest available version is used. | `string` | `""` | no |
 | <a name="input_label_order"></a> [label\_order](#input\_label\_order) | Label order, e.g. `name`,`application`. | `list(any)` | <pre>[<br>  "name",<br>  "environment"<br>]</pre> | no |
