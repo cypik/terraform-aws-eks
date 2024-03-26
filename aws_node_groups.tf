@@ -1,5 +1,5 @@
 module "eks_managed_node_group" {
-  source = "./node_group/"
+  source = "./node_group/aws_managed"
 
   for_each = { for k, v in var.managed_node_group : k => v if var.enabled }
 

@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name                  = "test-eks"
+  name                  = "demo"
   environment           = "test"
   region                = "eu-west-1"
   vpc_cidr_block        = module.vpc.vpc_cidr_block
@@ -136,13 +136,13 @@ data "aws_caller_identity" "current" {}
 
 
 module "eks" {
-  source      = "../"
+  source      = "./../../"
   enabled     = true
   name        = local.name
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.28"
+  kubernetes_version     = "1.29"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -178,7 +178,7 @@ module "eks" {
       capacity_type  = "ON_DEMAND"
       min_size       = 1
       max_size       = 2
-      desired_size   = 2
+      desired_size   = 1
       instance_types = ["t3.medium"]
     }
 
@@ -201,6 +201,7 @@ module "eks" {
       groups   = ["system:masters"]
     }
   ]
+
 }
 ## Kubernetes provider configuration
 data "aws_eks_cluster" "this" {
