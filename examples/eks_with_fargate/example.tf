@@ -12,7 +12,7 @@ locals {
 
 module "vpc" {
   source      = "cypik/vpc/aws"
-  version     = "1.0.1"
+  version     = "1.0.2"
   name        = "${local.name}-vpc"
   environment = local.environment
   cidr_block  = "10.10.0.0/16"
@@ -20,7 +20,7 @@ module "vpc" {
 
 module "subnets" {
   source              = "cypik/subnet/aws"
-  version             = "1.0.1"
+  version             = "1.0.3"
   name                = "${local.name}-subnet"
   environment         = local.environment
   nat_gateway_enabled = true
@@ -109,7 +109,7 @@ module "http_https" {
 
 module "kms" {
   source              = "cypik/kms/aws"
-  version             = "1.0.1"
+  version             = "1.0.2"
   name                = "${local.name}-kms"
   environment         = local.environment
   enabled             = true
@@ -142,7 +142,7 @@ module "eks" {
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.29"
+  kubernetes_version     = "1.31"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -162,7 +162,7 @@ module "eks" {
       xvda = {
         device_name = "/dev/xvda"
         ebs = {
-          volume_size = 50
+          volume_size = 64
           volume_type = "gp3"
           iops        = 3000
           throughput  = 150

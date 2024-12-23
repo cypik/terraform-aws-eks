@@ -107,6 +107,11 @@ variable "addons" {
       addon_version     = "v1.16.0-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
+    {
+      addon_name        = "aws-ebs-csi-driver"
+      addon_version     = "v1.37.0-eksbuild.1"
+      resolve_conflicts = "OVERWRITE"
+    },
   ]
   description = "Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources."
 }
