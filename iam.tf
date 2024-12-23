@@ -168,7 +168,18 @@ data "aws_iam_policy_document" "amazon_eks_node_group_autoscaler_policy" {
       "iam:GetServerCertificate",
       "ec2:AuthorizeSecurityGroupIngress",
       "ec2:RevokeSecurityGroupIngress",
-      "ec2:CreateSecurityGroup"
+      "ec2:CreateSecurityGroup",
+      "ec2:AttachVolume",
+      "ec2:CreateVolume",
+      "ec2:DeleteVolume",
+      "ec2:DescribeVolumes",
+      "ec2:DescribeVolumeAttribute",
+      "ec2:DescribeVolumeStatus",
+      "ec2:DescribeInstanceAttribute",
+      "ec2:DescribeInstanceStatus",
+      "ec2:ModifyVolume",
+      "ec2:DetachVolume",
+      "ec2:CreateTags",
 
     ]
     resources = ["*"]
