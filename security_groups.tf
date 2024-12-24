@@ -1,4 +1,3 @@
-
 resource "aws_security_group" "node_group" {
   count       = var.enabled ? 1 : 0
   name        = "${module.labels.id}-node-group"

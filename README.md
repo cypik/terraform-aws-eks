@@ -21,13 +21,13 @@ To use this module, you can include it in your Terraform configuration. Here's a
 ```hcl
 module "eks" {
   source      = "cypik/eks/aws"
-  version     = "1.0.4"
+  version     = "1.0.5"
   enabled     = true
   name        = local.name
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.29"
+  kubernetes_version     = "1.31"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -47,7 +47,7 @@ module "eks" {
       xvda = {
         device_name = "/dev/xvda"
         ebs = {
-          volume_size = 50
+          volume_size = 64
           volume_type = "gp3"
           iops        = 3000
           throughput  = 150
@@ -93,13 +93,13 @@ module "eks" {
 ## eks with fargate
 module "eks" {
   source      = "cypik/eks/aws"
-  version     = "1.0.4"
+  version     = "1.0.5"
   enabled     = true
   name        = local.name
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.29"
+  kubernetes_version     = "1.31"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -119,7 +119,7 @@ module "eks" {
       xvda = {
         device_name = "/dev/xvda"
         ebs = {
-          volume_size = 50
+          volume_size = 64
           volume_type = "gp3"
           iops        = 3000
           throughput  = 150
@@ -177,7 +177,6 @@ module "eks" {
       groups   = ["system:masters"]
     }
   ]
-}
 ```
 
 ## Example
@@ -194,8 +193,8 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6.6 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.32.1 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.5 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.82.2 |
 | <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | >= 2.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 1.10.0, < 2.0.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0.0 |
@@ -205,7 +204,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.32.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.82.2 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 1.10.0, < 2.0.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.0.0 |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | >= 2.0.0 |
@@ -216,7 +215,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 |------|--------|---------|
 | <a name="module_eks_managed_node_group"></a> [eks\_managed\_node\_group](#module\_eks\_managed\_node\_group) | ./node_group/aws_managed | n/a |
 | <a name="module_fargate"></a> [fargate](#module\_fargate) | ./node_group/fargate_profile | n/a |
-| <a name="module_labels"></a> [labels](#module\_labels) | cypik/labels/aws | 1.0.1 |
+| <a name="module_labels"></a> [labels](#module\_labels) | cypik/labels/aws | 1.0.2 |
 
 ## Resources
 
@@ -265,7 +264,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_addons"></a> [addons](#input\_addons) | Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources. | `list(any)` | <pre>[<br>  {<br>    "addon_name": "coredns",<br>    "addon_version": "v1.11.1-eksbuild.4",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "kube-proxy",<br>    "addon_version": "v1.29.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "vpc-cni",<br>    "addon_version": "v1.16.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "aws-ebs-csi-driver",<br>    "addon_version": "v1.37.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  }<br>]</pre> | no |
+| <a name="input_addons"></a> [addons](#input\_addons) | Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources. | `list(any)` | <pre>[<br>  {<br>    "addon_name": "coredns",<br>    "addon_version": "v1.11.3-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "kube-proxy",<br>    "addon_version": "v1.31.2-eksbuild.3",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "vpc-cni",<br>    "addon_version": "v1.19.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "aws-ebs-csi-driver",<br>    "addon_version": "v1.37.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  }<br>]</pre> | no |
 | <a name="input_allowed_cidr_blocks"></a> [allowed\_cidr\_blocks](#input\_allowed\_cidr\_blocks) | List of CIDR blocks to be allowed to connect to the EKS cluster. | `list(string)` | `[]` | no |
 | <a name="input_allowed_security_groups"></a> [allowed\_security\_groups](#input\_allowed\_security\_groups) | List of Security Group IDs to be allowed to connect to the EKS cluster. | `list(string)` | `[]` | no |
 | <a name="input_apply_config_map_aws_auth"></a> [apply\_config\_map\_aws\_auth](#input\_apply\_config\_map\_aws\_auth) | Whether to generate local files from `kubeconfig` and `config_map_aws_auth` and perform `kubectl apply` to apply the ConfigMap to allow the worker nodes to join the EKS cluster. | `bool` | `true` | no |
@@ -294,7 +293,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="input_local_exec_interpreter"></a> [local\_exec\_interpreter](#input\_local\_exec\_interpreter) | shell to use for local\_exec | `list(string)` | <pre>[<br>  "/bin/sh",<br>  "-c"<br>]</pre> | no |
 | <a name="input_managed_node_group"></a> [managed\_node\_group](#input\_managed\_node\_group) | Map of eks-managed node group definitions to create | `any` | `{}` | no |
 | <a name="input_managed_node_group_defaults"></a> [managed\_node\_group\_defaults](#input\_managed\_node\_group\_defaults) | Map of eks-managed node group definitions to create | `any` | `{}` | no |
-| <a name="input_managedby"></a> [managedby](#input\_managedby) | ManagedBy, eg 'cypik'. | `string` | `"cypik"` | no |
+| <a name="input_managedby"></a> [managedby](#input\_managedby) | ManagedBy, eg 'info@cypik.com'. | `string` | `"info@cypik.com"` | no |
 | <a name="input_map_additional_aws_accounts"></a> [map\_additional\_aws\_accounts](#input\_map\_additional\_aws\_accounts) | Additional AWS account numbers to add to `config-map-aws-auth` ConfigMap | `list(string)` | `[]` | no |
 | <a name="input_map_additional_iam_roles"></a> [map\_additional\_iam\_roles](#input\_map\_additional\_iam\_roles) | Additional IAM roles to add to `config-map-aws-auth` ConfigMap | <pre>list(object({<br>    rolearn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_map_additional_iam_users"></a> [map\_additional\_iam\_users](#input\_map\_additional\_iam\_users) | Additional IAM users to add to `config-map-aws-auth` ConfigMap | <pre>list(object({<br>    userarn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
@@ -323,7 +322,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="output_cluster_iam_role_name"></a> [cluster\_iam\_role\_name](#output\_cluster\_iam\_role\_name) | IAM role name of the EKS cluster |
 | <a name="output_cluster_iam_role_unique_id"></a> [cluster\_iam\_role\_unique\_id](#output\_cluster\_iam\_role\_unique\_id) | Stable and unique string identifying the IAM role |
 | <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | The name/id of the EKS cluster. Will block on cluster creation until the cluster is really ready |
-| <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
+| <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | The name of the EKS cluster |
 | <a name="output_cluster_oidc_issuer_url"></a> [cluster\_oidc\_issuer\_url](#output\_cluster\_oidc\_issuer\_url) | The URL on the EKS cluster for the OpenID Connect identity provider |
 | <a name="output_cluster_platform_version"></a> [cluster\_platform\_version](#output\_cluster\_platform\_version) | Platform version for the cluster |
 | <a name="output_cluster_primary_security_group_id"></a> [cluster\_primary\_security\_group\_id](#output\_cluster\_primary\_security\_group\_id) | Cluster security group that was created by Amazon EKS for the cluster. Managed node groups use default security group for control-plane-to-data-plane communication. Referred to as 'Cluster security group' in the EKS console |
@@ -334,5 +333,4 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="output_node_security_group_arn"></a> [node\_security\_group\_arn](#output\_node\_security\_group\_arn) | Amazon Resource Name (ARN) of the node shared security group |
 | <a name="output_node_security_group_id"></a> [node\_security\_group\_id](#output\_node\_security\_group\_id) | ID of the node shared security group |
 | <a name="output_oidc_provider_arn"></a> [oidc\_provider\_arn](#output\_oidc\_provider\_arn) | The ARN of the OIDC Provider if `enable_irsa = true` |
-| <a name="output_tags"></a> [tags](#output\_tags) | n/a |
 <!-- END_TF_DOCS -->
