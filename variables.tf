@@ -26,8 +26,8 @@ variable "label_order" {
 
 variable "managedby" {
   type        = string
-  default     = "cypik"
-  description = "ManagedBy, eg 'cypik'."
+  default     = "info@cypik.com"
+  description = "ManagedBy, eg 'info@cypik.com'."
 }
 
 variable "attributes" {
@@ -94,17 +94,17 @@ variable "addons" {
   default = [
     {
       addon_name        = "coredns"
-      addon_version     = "v1.11.1-eksbuild.4"
+      addon_version     = "v1.11.3-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "kube-proxy"
-      addon_version     = "v1.29.0-eksbuild.1"
+      addon_version     = "v1.31.2-eksbuild.3"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "vpc-cni"
-      addon_version     = "v1.16.0-eksbuild.1"
+      addon_version     = "v1.19.0-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
     {
