@@ -5,7 +5,7 @@ provider "aws" {
 locals {
   name                  = "demo"
   environment           = "test"
-  region                = "eu-west-1"
+  region                = "us-east-2"
   vpc_cidr_block        = module.vpc.vpc_cidr_block
   additional_cidr_block = "172.16.0.0/16"
 }
@@ -26,7 +26,7 @@ module "subnets" {
   nat_gateway_enabled = true
   single_nat_gateway  = true
   availability_zones  = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  vpc_id              = module.vpc.id
+  vpc_id              = module.vpc.vpc_id
   type                = "public-private"
   igw_id              = module.vpc.igw_id
   cidr_block          = local.vpc_cidr_block
@@ -43,10 +43,10 @@ module "subnets" {
 
 module "ssh" {
   source      = "cypik/security-group/aws"
-  version     = "1.0.1"
+  version     = "1.0.2"
   name        = "${local.name}-ssh"
   environment = local.environment
-  vpc_id      = module.vpc.id
+  vpc_id      = module.vpc.vpc_id
   new_sg_ingress_rules_with_cidr_blocks = [{
     rule_count  = 1
     from_port   = 22
@@ -70,10 +70,10 @@ module "ssh" {
 
 module "http_https" {
   source      = "cypik/security-group/aws"
-  version     = "1.0.1"
+  version     = "1.0.2"
   name        = "${local.name}-http-https"
   environment = local.environment
-  vpc_id      = module.vpc.id
+  vpc_id      = module.vpc.vpc_id
   ## INGRESS Rules
   new_sg_ingress_rules_with_cidr_blocks = [
     {
@@ -145,7 +145,7 @@ module "eks" {
   kubernetes_version     = "1.31"
   endpoint_public_access = true
   # Networking
-  vpc_id                            = module.vpc.id
+  vpc_id                            = module.vpc.vpc_id
   subnet_ids                        = module.subnets.private_subnet_id
   allowed_security_groups           = [module.ssh.security_group_id]
   eks_additional_security_group_ids = [module.ssh.security_group_id, module.http_https.security_group_id]
@@ -172,6 +172,7 @@ module "eks" {
       }
     }
   }
+
   managed_node_group = {
     critical = {
       name           = "${module.eks.cluster_name}-critical-node"
@@ -201,21 +202,4 @@ module "eks" {
       groups   = ["system:masters"]
     }
   ]
-
-}
-## Kubernetes provider configuration
-data "aws_eks_cluster" "this" {
-  depends_on = [module.eks]
-  name       = module.eks.cluster_id
-}
-
-data "aws_eks_cluster_auth" "this" {
-  depends_on = [module.eks]
-  name       = module.eks.cluster_certificate_authority_data
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.this.token
 }

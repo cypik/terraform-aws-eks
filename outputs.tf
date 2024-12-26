@@ -83,10 +83,7 @@ output "node_group_iam_role_unique_id" {
   description = "Stable and unique string identifying the IAM role"
 }
 
-output "tags" {
-  value = module.labels.tags
-}
-
 output "cluster_name" {
-  value = module.labels.id
+  description = "The name of the EKS cluster"
+  value       = module.labels.id
 }
