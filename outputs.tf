@@ -87,3 +87,7 @@ output "cluster_name" {
   description = "The name of the EKS cluster"
   value       = module.labels.id
 }
+
+output "cluster_id_from_default" {
+  value = aws_eks_cluster.default[*].id
+}

@@ -23,8 +23,33 @@ resource "aws_launch_template" "this" {
   vpc_security_group_ids = var.vpc_security_group_ids
 
   disable_api_termination = var.disable_api_termination
-  kernel_id               = var.kernel_id
-  ram_disk_id             = var.ram_disk_id
+  disable_api_stop        = var.disable_api_stop
+
+  kernel_id   = var.kernel_id
+  ram_disk_id = var.ram_disk_id
+
+  hibernation_options {
+    configured = var.hibernation_configured
+  }
+
+  iam_instance_profile {
+    name = var.iam_instance_profile_name
+  }
+
+  instance_initiated_shutdown_behavior = var.instance_initiated_shutdown_behavior
+  instance_type                        = var.instance_type
+
+  maintenance_options {
+    auto_recovery = var.maintenance_auto_recovery
+  }
+
+  private_dns_name_options {
+    hostname_type                        = var.hostname_type
+    enable_resource_name_dns_a_record    = var.enable_resource_name_dns_a_record
+    enable_resource_name_dns_aaaa_record = var.enable_resource_name_dns_aaaa_record
+  }
+
+  update_default_version = var.update_default_version
 
   dynamic "block_device_mappings" {
     for_each = var.block_device_mappings
@@ -99,7 +124,6 @@ resource "aws_launch_template" "this" {
     }
   }
 
-
   dynamic "license_specification" {
     for_each = var.license_specifications != null ? [var.license_specifications] : []
     content {
@@ -140,7 +164,6 @@ resource "aws_launch_template" "this" {
       network_interface_id         = lookup(network_interfaces.value, "network_interface_id", null)
       private_ip_address           = lookup(network_interfaces.value, "private_ip_address", null)
       security_groups              = lookup(network_interfaces.value, "security_groups", null) != null ? network_interfaces.value.security_groups : []
-
     }
   }
 
@@ -163,10 +186,10 @@ resource "aws_launch_template" "this" {
       resource_type = tag_specifications.key
       tags = merge(
         module.labels.tags,
-      { Name = module.labels.id })
+        { Name = module.labels.id }
+      )
     }
   }
-
 
   lifecycle {
     create_before_destroy = true
@@ -203,10 +226,10 @@ resource "aws_eks_node_group" "this" {
   labels               = var.labels
 
   dynamic "launch_template" {
-    for_each = var.enabled ? [1] : []
+    for_each = var.enabled && var.launch_template_enabled ? [1] : []
     content {
-      name    = try(aws_launch_template.this[0].name)
-      version = try(aws_launch_template.this[0].latest_version)
+      name    = try(aws_launch_template.this[0].name, null)
+      version = try(aws_launch_template.this[0].latest_version, null)
     }
   }
 
@@ -222,7 +245,7 @@ resource "aws_eks_node_group" "this" {
     for_each = var.taints
     content {
       key    = taint.value.key
-      value  = lookup(taint.value, "value")
+      value  = lookup(taint.value, "value", null)
       effect = taint.value.effect
     }
   }

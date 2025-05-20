@@ -309,3 +309,69 @@ variable "schedules" {
   type        = map(any)
   default     = {}
 }
+
+variable "disable_api_stop" {
+  description = "If true, prevents the instance from being stopped via the API."
+  type        = bool
+  default     = false
+}
+
+variable "hibernation_configured" {
+  description = "Enable hibernation for instances launched from this template."
+  type        = bool
+  default     = false
+}
+
+variable "iam_instance_profile_name" {
+  description = "Name of the IAM instance profile to associate with the EC2 instance."
+  type        = string
+  default     = null
+}
+
+variable "instance_initiated_shutdown_behavior" {
+  description = "Shutdown behavior for the instance (stop or terminate)."
+  type        = string
+  default     = "stop"
+}
+
+variable "instance_type" {
+  description = "EC2 instance type to launch."
+  type        = string
+  default     = null
+}
+
+variable "maintenance_auto_recovery" {
+  description = "Whether to enable automatic recovery from instance maintenance events."
+  type        = string
+  default     = null
+}
+
+variable "hostname_type" {
+  description = "Type of hostname to assign (ip-name, resource-name)."
+  type        = string
+  default     = null
+}
+
+variable "enable_resource_name_dns_a_record" {
+  description = "Whether to create an A record DNS entry for the instance hostname."
+  type        = bool
+  default     = false
+}
+
+variable "enable_resource_name_dns_aaaa_record" {
+  description = "Whether to create an AAAA record DNS entry for the instance hostname."
+  type        = bool
+  default     = false
+}
+
+variable "update_default_version" {
+  description = "Whether to update the default version of the launch template."
+  type        = bool
+  default     = true
+}
+
+variable "launch_template_enabled" {
+  description = "Whether to enable launch template support for EKS node group"
+  type        = bool
+  default     = false
+}

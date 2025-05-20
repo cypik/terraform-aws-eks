@@ -17,7 +17,13 @@ resource "aws_cloudwatch_log_group" "default" {
   retention_in_days = var.cluster_log_retention_period
   tags              = module.labels.tags
   kms_key_id        = join("", aws_kms_key.cloudwatch_log[*].arn)
+  log_group_class   = var.log_group_class
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
+
 
 #tfsec:ignore:aws-eks-no-public-cluster-access-to-cidr
 #tfsec:ignore:aws-eks-no-public-cluster-access
