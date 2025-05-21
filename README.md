@@ -27,7 +27,7 @@ module "eks" {
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.31"
+  kubernetes_version     = "1.32"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -99,7 +99,7 @@ module "eks" {
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.31"
+  kubernetes_version     = "1.32"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -264,7 +264,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_addons"></a> [addons](#input\_addons) | Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources. | <pre>list(object({<br>    addon_name               = string<br>    addon_version            = string<br>    resolve_conflicts        = string<br>    service_account_role_arn = optional(string)<br>  }))</pre> | <pre>[<br>  {<br>    "addon_name": "coredns",<br>    "addon_version": null,<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "kube-proxy",<br>    "addon_version": null,<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "vpc-cni",<br>    "addon_version": null,<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "aws-ebs-csi-driver",<br>    "addon_version": null,<br>    "resolve_conflicts": "OVERWRITE"<br>  }<br>]</pre> | no |
+| <a name="input_addons"></a> [addons](#input\_addons) | Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources. | <pre>list(object({<br>    addon_name               = string<br>    addon_version            = string<br>    resolve_conflicts        = string<br>    service_account_role_arn = optional(string)<br>  }))</pre> | <pre>[<br>  {<br>    "addon_name": "coredns",<br>    "addon_version": "v1.11.4-eksbuild.2",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "kube-proxy",<br>    "addon_version": "v1.31.7-eksbuild.7",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "vpc-cni",<br>    "addon_version": "v1.19.2-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "aws-ebs-csi-driver",<br>    "addon_version": "v1.43.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  }<br>]</pre> | no |
 | <a name="input_allowed_cidr_blocks"></a> [allowed\_cidr\_blocks](#input\_allowed\_cidr\_blocks) | List of CIDR blocks to be allowed to connect to the EKS cluster. | `list(string)` | `[]` | no |
 | <a name="input_allowed_security_groups"></a> [allowed\_security\_groups](#input\_allowed\_security\_groups) | List of Security Group IDs to be allowed to connect to the EKS cluster. | `list(string)` | `[]` | no |
 | <a name="input_apply_config_map_aws_auth"></a> [apply\_config\_map\_aws\_auth](#input\_apply\_config\_map\_aws\_auth) | Whether to generate local files from `kubeconfig` and `config_map_aws_auth` and perform `kubectl apply` to apply the ConfigMap to allow the worker nodes to join the EKS cluster. | `bool` | `true` | no |

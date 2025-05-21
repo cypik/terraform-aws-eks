@@ -109,22 +109,22 @@ variable "addons" {
   default = [
     {
       addon_name        = "coredns"
-      addon_version     = null
+      addon_version     = "v1.11.4-eksbuild.2"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "kube-proxy"
-      addon_version     = null
+      addon_version     = "v1.31.7-eksbuild.7"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "vpc-cni"
-      addon_version     = null
+      addon_version     = "v1.19.2-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "aws-ebs-csi-driver"
-      addon_version     = null
+      addon_version     = "v1.43.0-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
   ]

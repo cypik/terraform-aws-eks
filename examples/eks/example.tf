@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name                  = "demo1"
+  name                  = "demo2"
   environment           = "test2"
   region                = "us-east-1"
   vpc_cidr_block        = module.vpc.vpc_cidr_block
@@ -142,7 +142,7 @@ module "eks" {
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.30"
+  kubernetes_version     = "1.32"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.vpc_id

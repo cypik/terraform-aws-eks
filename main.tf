@@ -24,7 +24,6 @@ resource "aws_cloudwatch_log_group" "default" {
   }
 }
 
-
 #tfsec:ignore:aws-eks-no-public-cluster-access-to-cidr
 #tfsec:ignore:aws-eks-no-public-cluster-access
 resource "aws_eks_cluster" "default" {
@@ -47,9 +46,9 @@ resource "aws_eks_cluster" "default" {
   dynamic "encryption_config" {
     for_each = var.cluster_encryption_config_enabled ? [local.cluster_encryption_config] : []
     content {
-      resources = lookup(encryption_config.value, "resources")
+      resources = try(encryption_config.value["resources"], [])
       provider {
-        key_arn = lookup(encryption_config.value, "provider_key_arn")
+        key_arn = try(encryption_config.value["provider_key_arn"], null)
       }
     }
   }
