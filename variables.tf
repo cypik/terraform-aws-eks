@@ -5,7 +5,17 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
+variable "log_group_class" {
+  description = "(Optional) Specifies the class of the log group. Valid values: STANDARD or INFREQUENT_ACCESS."
+  type        = string
+  default     = "STANDARD"
+}
 
+#variable "skip_log_group_destroy" {
+#  description = "(Optional) If true, log group will not be deleted during destroy; only removed from state."
+#  type        = bool
+#  default     = false
+#}
 variable "repository" {
   type        = string
   default     = "https://github.com/cypik/terraform-aws-eks"
@@ -90,26 +100,31 @@ variable "nodes_additional_security_group_ids" {
   description = "EKS additional node group ids"
 }
 variable "addons" {
-  type = list(any)
+  type = list(object({
+    addon_name               = string
+    addon_version            = string
+    resolve_conflicts        = string
+    service_account_role_arn = optional(string)
+  }))
   default = [
     {
       addon_name        = "coredns"
-      addon_version     = "v1.11.3-eksbuild.1"
+      addon_version     = "v1.11.4-eksbuild.2"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "kube-proxy"
-      addon_version     = "v1.31.2-eksbuild.3"
+      addon_version     = "v1.31.7-eksbuild.7"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "vpc-cni"
-      addon_version     = "v1.19.0-eksbuild.1"
+      addon_version     = "v1.19.2-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
     {
       addon_name        = "aws-ebs-csi-driver"
-      addon_version     = "v1.37.0-eksbuild.1"
+      addon_version     = "v1.43.0-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     },
   ]

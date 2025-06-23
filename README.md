@@ -27,7 +27,7 @@ module "eks" {
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.31"
+  kubernetes_version     = "1.32"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -99,7 +99,7 @@ module "eks" {
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.31"
+  kubernetes_version     = "1.32"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.id
@@ -264,7 +264,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_addons"></a> [addons](#input\_addons) | Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources. | `list(any)` | <pre>[<br>  {<br>    "addon_name": "coredns",<br>    "addon_version": "v1.11.3-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "kube-proxy",<br>    "addon_version": "v1.31.2-eksbuild.3",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "vpc-cni",<br>    "addon_version": "v1.19.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "aws-ebs-csi-driver",<br>    "addon_version": "v1.37.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  }<br>]</pre> | no |
+| <a name="input_addons"></a> [addons](#input\_addons) | Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources. | <pre>list(object({<br>    addon_name               = string<br>    addon_version            = string<br>    resolve_conflicts        = string<br>    service_account_role_arn = optional(string)<br>  }))</pre> | <pre>[<br>  {<br>    "addon_name": "coredns",<br>    "addon_version": "v1.11.4-eksbuild.2",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "kube-proxy",<br>    "addon_version": "v1.31.7-eksbuild.7",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "vpc-cni",<br>    "addon_version": "v1.19.2-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  },<br>  {<br>    "addon_name": "aws-ebs-csi-driver",<br>    "addon_version": "v1.43.0-eksbuild.1",<br>    "resolve_conflicts": "OVERWRITE"<br>  }<br>]</pre> | no |
 | <a name="input_allowed_cidr_blocks"></a> [allowed\_cidr\_blocks](#input\_allowed\_cidr\_blocks) | List of CIDR blocks to be allowed to connect to the EKS cluster. | `list(string)` | `[]` | no |
 | <a name="input_allowed_security_groups"></a> [allowed\_security\_groups](#input\_allowed\_security\_groups) | List of Security Group IDs to be allowed to connect to the EKS cluster. | `list(string)` | `[]` | no |
 | <a name="input_apply_config_map_aws_auth"></a> [apply\_config\_map\_aws\_auth](#input\_apply\_config\_map\_aws\_auth) | Whether to generate local files from `kubeconfig` and `config_map_aws_auth` and perform `kubectl apply` to apply the ConfigMap to allow the worker nodes to join the EKS cluster. | `bool` | `true` | no |
@@ -291,6 +291,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | Desired Kubernetes master version. If you do not specify a value, the latest available version is used. | `string` | `""` | no |
 | <a name="input_label_order"></a> [label\_order](#input\_label\_order) | Label order, e.g. `name`,`application`. | `list(any)` | <pre>[<br>  "name",<br>  "environment"<br>]</pre> | no |
 | <a name="input_local_exec_interpreter"></a> [local\_exec\_interpreter](#input\_local\_exec\_interpreter) | shell to use for local\_exec | `list(string)` | <pre>[<br>  "/bin/sh",<br>  "-c"<br>]</pre> | no |
+| <a name="input_log_group_class"></a> [log\_group\_class](#input\_log\_group\_class) | (Optional) Specifies the class of the log group. Valid values: STANDARD or INFREQUENT\_ACCESS. | `string` | `"STANDARD"` | no |
 | <a name="input_managed_node_group"></a> [managed\_node\_group](#input\_managed\_node\_group) | Map of eks-managed node group definitions to create | `any` | `{}` | no |
 | <a name="input_managed_node_group_defaults"></a> [managed\_node\_group\_defaults](#input\_managed\_node\_group\_defaults) | Map of eks-managed node group definitions to create | `any` | `{}` | no |
 | <a name="input_managedby"></a> [managedby](#input\_managedby) | ManagedBy, eg 'info@cypik.com'. | `string` | `"info@cypik.com"` | no |
@@ -322,6 +323,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="output_cluster_iam_role_name"></a> [cluster\_iam\_role\_name](#output\_cluster\_iam\_role\_name) | IAM role name of the EKS cluster |
 | <a name="output_cluster_iam_role_unique_id"></a> [cluster\_iam\_role\_unique\_id](#output\_cluster\_iam\_role\_unique\_id) | Stable and unique string identifying the IAM role |
 | <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | The name/id of the EKS cluster. Will block on cluster creation until the cluster is really ready |
+| <a name="output_cluster_id_from_default"></a> [cluster\_id\_from\_default](#output\_cluster\_id\_from\_default) | n/a |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | The name of the EKS cluster |
 | <a name="output_cluster_oidc_issuer_url"></a> [cluster\_oidc\_issuer\_url](#output\_cluster\_oidc\_issuer\_url) | The URL on the EKS cluster for the OpenID Connect identity provider |
 | <a name="output_cluster_platform_version"></a> [cluster\_platform\_version](#output\_cluster\_platform\_version) | Platform version for the cluster |

@@ -17,6 +17,11 @@ resource "aws_cloudwatch_log_group" "default" {
   retention_in_days = var.cluster_log_retention_period
   tags              = module.labels.tags
   kms_key_id        = join("", aws_kms_key.cloudwatch_log[*].arn)
+  log_group_class   = var.log_group_class
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 #tfsec:ignore:aws-eks-no-public-cluster-access-to-cidr
@@ -41,9 +46,9 @@ resource "aws_eks_cluster" "default" {
   dynamic "encryption_config" {
     for_each = var.cluster_encryption_config_enabled ? [local.cluster_encryption_config] : []
     content {
-      resources = lookup(encryption_config.value, "resources")
+      resources = try(encryption_config.value["resources"], [])
       provider {
-        key_arn = lookup(encryption_config.value, "provider_key_arn")
+        key_arn = try(encryption_config.value["provider_key_arn"], null)
       }
     }
   }
