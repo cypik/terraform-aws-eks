@@ -334,3 +334,9 @@ variable "fargate_profiles" {
   default     = {}
   description = "The number of Fargate Profiles that would be created."
 }
+
+variable "cloudwatch_observability_enabled" {
+  description = "Enable CloudWatch Observability addon"
+  type        = bool
+  default     = false
+}
