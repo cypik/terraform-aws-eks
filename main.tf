@@ -112,3 +112,41 @@ resource "aws_eks_addon" "cluster" {
 
   tags = module.labels.tags
 }
+
+
+#################################
+
+#  Add CloudWatch Observability Addon
+# ------------------------------------------------------------------------------------
+# Adding addon for Fluent Bit log collection to CloudWatch
+
+resource "aws_eks_addon" "cloudwatch_observability" {
+  count                       = var.enabled && var.cloudwatch_observability_enabled ? 1 : 0
+  cluster_name                = aws_eks_cluster.default[0].name
+  addon_name                  = "amazon-cloudwatch-observability"
+  addon_version               = null
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+  service_account_role_arn    = aws_iam_role.fluentbit_irsa_role[0].arn
+  tags                        = module.labels.tags
+
+}
+
+
+
+resource "kubectl_manifest" "fluentbit_sa" {
+  count     = var.enabled && var.cloudwatch_observability_enabled ? 1 : 0
+  yaml_body = <<YAML
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluent-bit
+  namespace: amazon-cloudwatch
+  annotations:
+    eks.amazonaws.com/role-arn: ${aws_iam_role.fluentbit_irsa_role[0].arn}
+YAML
+
+  depends_on = [
+    aws_eks_addon.cloudwatch_observability
+  ]
+}

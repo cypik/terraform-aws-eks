@@ -12,7 +12,7 @@ locals {
 
 module "vpc" {
   source      = "cypik/vpc/aws"
-  version     = "1.0.2"
+  version     = "1.0.3"
   name        = "${local.name}-vpc"
   environment = local.environment
   cidr_block  = "10.10.0.0/16"
@@ -20,7 +20,7 @@ module "vpc" {
 
 module "subnets" {
   source              = "cypik/subnet/aws"
-  version             = "1.0.3"
+  version             = "1.0.5"
   name                = "${local.name}-subnet"
   environment         = local.environment
   nat_gateway_enabled = true

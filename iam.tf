@@ -191,3 +191,66 @@ resource "aws_iam_instance_profile" "default" {
   name  = format("%s-instance-profile", module.labels.id)
   role  = join("", aws_iam_role.node_groups[*].name)
 }
+
+
+
+
+#  IAM role for CloudWatch logs for Fluent Bit
+# -------------------------------------------
+# Added for cloudwatch logging from EKS nodes
+
+resource "aws_iam_policy" "cloudwatch_logs_policy" {
+  count = var.enabled && var.cloudwatch_observability_enabled ? 1 : 0
+
+  name = "eks-fluentbit-cloudwatch-logs"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams",
+          "logs:DescribeLogGroups",
+          "logs:CreateLogStream",
+          "logs:CreateLogGroup"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "fluentbit_irsa_role" {
+  count = var.enabled && var.oidc_provider_enabled && var.cloudwatch_observability_enabled ? 1 : 0
+
+  name               = "eks-fluentbit-irsa-role"
+  assume_role_policy = data.aws_iam_policy_document.fluentbit_irsa_assume_role[0].json
+  tags               = module.labels.tags
+}
+
+data "aws_iam_policy_document" "fluentbit_irsa_assume_role" {
+  count = var.enabled && var.oidc_provider_enabled && var.cloudwatch_observability_enabled ? 1 : 0
+
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.default[0].arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.default[0].url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:amazon-cloudwatch:cloudwatch-agent"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "fluentbit_logs_policy_attach" {
+  count      = var.enabled && var.oidc_provider_enabled && var.cloudwatch_observability_enabled ? 1 : 0
+  policy_arn = aws_iam_policy.cloudwatch_logs_policy[0].arn
+  role       = aws_iam_role.fluentbit_irsa_role[0].name
+}

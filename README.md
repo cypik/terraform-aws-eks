@@ -21,7 +21,7 @@ To use this module, you can include it in your Terraform configuration. Here's a
 ```hcl
 module "eks" {
   source      = "cypik/eks/aws"
-  version     = "1.0.5"
+  version     = "1.0.6"
   enabled     = true
   name        = local.name
   environment = local.environment
@@ -93,7 +93,7 @@ module "eks" {
 ## eks with fargate
 module "eks" {
   source      = "cypik/eks/aws"
-  version     = "1.0.5"
+  version     = "1.0.6"
   enabled     = true
   name        = local.name
   environment = local.environment
