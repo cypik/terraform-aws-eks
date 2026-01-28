@@ -165,3 +165,45 @@ resource "aws_eks_addon" "ebs_csi_driver" {
 
   tags = module.labels.tags
 }
+
+data "aws_eks_cluster" "eks-cluster" {
+  count = var.enabled && var.enable_gp3_storage_class ? 1 : 0
+  name  = join("", aws_eks_cluster.default[*].id)
+}
+
+data "aws_eks_cluster_auth" "eks-cluster" {
+  count = var.enabled && var.enable_gp3_storage_class ? 1 : 0
+  name  = join("", aws_eks_cluster.default[*].id)
+}
+
+provider "kubernetes" {
+  alias                  = "eks"
+  token                  = join("", data.aws_eks_cluster_auth.eks-cluster[*].token)
+  host                   = join("", data.aws_eks_cluster.eks-cluster[*].endpoint)
+  cluster_ca_certificate = base64decode(join("", data.aws_eks_cluster.eks-cluster[*].certificate_authority[0].data))
+}
+
+resource "kubernetes_storage_class_v1" "gp3" {
+  provider = kubernetes.eks
+  count    = var.enabled && var.enable_gp3_storage_class ? 1 : 0
+
+  metadata {
+    name = var.gp3_storage_class_name
+    annotations = {
+      "storageclass.kubernetes.io/is-default-class" = tostring(var.gp3_default)
+    }
+  }
+
+  storage_provisioner = var.gp3_provisioner
+
+  parameters = {
+    type      = var.gp3_volume_type
+    fsType    = var.gp3_fs_type
+    encrypted = var.gp3_encrypted
+  }
+  allow_volume_expansion = var.gp3_allow_volume_expansion
+  reclaim_policy         = var.gp3_reclaim_policy
+  volume_binding_mode    = var.gp3_volume_binding_mode
+
+  depends_on = [aws_eks_addon.ebs_csi_driver, data.aws_eks_cluster.eks-cluster]
+}

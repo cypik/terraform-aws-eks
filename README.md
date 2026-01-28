@@ -208,6 +208,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.82.2 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 1.19.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 3.0.1 |
+| <a name="provider_kubernetes.eks"></a> [kubernetes.eks](#provider\_kubernetes.eks) | >= 3.0.1 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.2.4 |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | >= 4.1.0 |
 
@@ -258,10 +259,13 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | [aws_security_group_rule.node_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [kubectl_manifest.fluentbit_sa](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
 | [kubernetes_config_map.aws_auth_ignore_changes](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
+| [kubernetes_storage_class_v1.gp3](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/storage_class_v1) | resource |
 | [null_resource.wait_for_cluster](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_eks_cluster.eks](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
+| [aws_eks_cluster.eks-cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 | [aws_eks_cluster_auth.eks](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
+| [aws_eks_cluster_auth.eks-cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 | [aws_iam_policy_document.amazon_eks_node_group_autoscaler_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -294,6 +298,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="input_cluster_service_ipv6_cidr"></a> [cluster\_service\_ipv6\_cidr](#input\_cluster\_service\_ipv6\_cidr) | The CIDR block to assign Kubernetes pod and service IP addresses from if `ipv6` was specified when the cluster was created. Kubernetes assigns service addresses from the unique local address range (fc00::/7) because you can't specify a custom IPv6 CIDR block when you create the cluster | `string` | `null` | no |
 | <a name="input_cluster_timeouts"></a> [cluster\_timeouts](#input\_cluster\_timeouts) | Create, update, and delete timeout configurations for the cluster | `map(string)` | `{}` | no |
 | <a name="input_eks_additional_security_group_ids"></a> [eks\_additional\_security\_group\_ids](#input\_eks\_additional\_security\_group\_ids) | EKS additional security group id | `list(string)` | `[]` | no |
+| <a name="input_enable_gp3_storage_class"></a> [enable\_gp3\_storage\_class](#input\_enable\_gp3\_storage\_class) | Whether to create gp3 StorageClass | `bool` | `true` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Whether to create the resources. Set to `false` to prevent the module from creating any resources. | `bool` | `true` | no |
 | <a name="input_enabled_cluster_log_types"></a> [enabled\_cluster\_log\_types](#input\_enabled\_cluster\_log\_types) | A list of the desired control plane logging to enable. For more information, see https://docs.aws.amazon.com/en_us/eks/latest/userguide/control-plane-logs.html. Possible values [`api`, `audit`, `authenticator`, `controllerManager`, `scheduler`]. | `list(string)` | <pre>[<br>  "api",<br>  "audit",<br>  "authenticator",<br>  "controllerManager",<br>  "scheduler"<br>]</pre> | no |
 | <a name="input_endpoint_private_access"></a> [endpoint\_private\_access](#input\_endpoint\_private\_access) | Indicates whether or not the Amazon EKS private API server endpoint is enabled. Default to AWS EKS resource and it is false. | `bool` | `true` | no |
@@ -301,6 +306,15 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
 | <a name="input_fargate_enabled"></a> [fargate\_enabled](#input\_fargate\_enabled) | Whether fargate profile is enabled or not | `bool` | `false` | no |
 | <a name="input_fargate_profiles"></a> [fargate\_profiles](#input\_fargate\_profiles) | The number of Fargate Profiles that would be created. | `map(any)` | `{}` | no |
+| <a name="input_gp3_allow_volume_expansion"></a> [gp3\_allow\_volume\_expansion](#input\_gp3\_allow\_volume\_expansion) | Indicates whether the storage class allow volume expand | `bool` | `true` | no |
+| <a name="input_gp3_default"></a> [gp3\_default](#input\_gp3\_default) | Set gp3 as default StorageClass | `bool` | `true` | no |
+| <a name="input_gp3_encrypted"></a> [gp3\_encrypted](#input\_gp3\_encrypted) | Indicates whether the gp3 storage class creates encrypted volumes | `bool` | `true` | no |
+| <a name="input_gp3_fs_type"></a> [gp3\_fs\_type](#input\_gp3\_fs\_type) | Filesystem type | `string` | `"ext4"` | no |
+| <a name="input_gp3_provisioner"></a> [gp3\_provisioner](#input\_gp3\_provisioner) | CSI provisioner for EBS | `string` | `"ebs.csi.aws.com"` | no |
+| <a name="input_gp3_reclaim_policy"></a> [gp3\_reclaim\_policy](#input\_gp3\_reclaim\_policy) | Reclaim policy for gp3 volumes | `string` | `"Delete"` | no |
+| <a name="input_gp3_storage_class_name"></a> [gp3\_storage\_class\_name](#input\_gp3\_storage\_class\_name) | Name of the gp3 StorageClass | `string` | `"gp3"` | no |
+| <a name="input_gp3_volume_binding_mode"></a> [gp3\_volume\_binding\_mode](#input\_gp3\_volume\_binding\_mode) | Volume binding mode | `string` | `"WaitForFirstConsumer"` | no |
+| <a name="input_gp3_volume_type"></a> [gp3\_volume\_type](#input\_gp3\_volume\_type) | EBS volume type for StorageClass | `string` | `"gp3"` | no |
 | <a name="input_iam_role_additional_policies"></a> [iam\_role\_additional\_policies](#input\_iam\_role\_additional\_policies) | Additional policies to be added to the IAM role | `map(string)` | `{}` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | Desired Kubernetes master version. If you do not specify a value, the latest available version is used. | `string` | `""` | no |
 | <a name="input_label_order"></a> [label\_order](#input\_label\_order) | Label order, e.g. `name`,`application`. | `list(any)` | <pre>[<br>  "name",<br>  "environment"<br>]</pre> | no |
@@ -321,6 +335,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="input_public_access_cidrs"></a> [public\_access\_cidrs](#input\_public\_access\_cidrs) | Indicates which CIDR blocks can access the Amazon EKS public API server endpoint when enabled. EKS defaults this to a list with 0.0.0.0/0. | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_repository"></a> [repository](#input\_repository) | Terraform current module repo | `string` | `"https://github.com/cypik/terraform-aws-eks"` | no |
 | <a name="input_schedules"></a> [schedules](#input\_schedules) | Map of autoscaling group schedule to create | `map(any)` | `{}` | no |
+| <a name="input_storage_class"></a> [storage\_class](#input\_storage\_class) | Configuration for the storage class that defines how volumes are allocated in Kubernetes. | <pre>object({<br>    volume_binding_mode    = optional(string, "WaitForFirstConsumer")<br>    allow_volume_expansion = optional(bool, true)<br>  })</pre> | <pre>{<br>  "allow_volume_expansion": true,<br>  "volume_binding_mode": "WaitForFirstConsumer"<br>}</pre> | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | A list of subnet IDs to launch the cluster in. | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map(any)` | `{}` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC ID for the EKS cluster. | `string` | `""` | no |

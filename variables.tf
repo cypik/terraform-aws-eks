@@ -11,11 +11,6 @@ variable "log_group_class" {
   default     = "STANDARD"
 }
 
-#variable "skip_log_group_destroy" {
-#  description = "(Optional) If true, log group will not be deleted during destroy; only removed from state."
-#  type        = bool
-#  default     = false
-#}
 variable "repository" {
   type        = string
   default     = "https://github.com/cypik/terraform-aws-eks"
@@ -328,4 +323,82 @@ variable "cloudwatch_observability_enabled" {
   description = "Enable CloudWatch Observability addon"
   type        = bool
   default     = false
+}
+variable "enable_gp3_storage_class" {
+  type        = bool
+  default     = true
+  description = "Whether to create gp3 StorageClass"
+}
+variable "storage_class" {
+  type = object({
+    volume_binding_mode    = optional(string, "WaitForFirstConsumer")
+    allow_volume_expansion = optional(bool, true)
+  })
+
+  default = {
+    volume_binding_mode    = "WaitForFirstConsumer"
+    allow_volume_expansion = true
+  }
+
+  validation {
+    condition = (
+      contains(["WaitForFirstConsumer", "Immediate"], var.storage_class.volume_binding_mode)
+    )
+    error_message = "volume_binding_mode must be one of: 'WaitForFirstConsumer' or 'Immediate'."
+  }
+  description = "Configuration for the storage class that defines how volumes are allocated in Kubernetes."
+}
+
+variable "gp3_storage_class_name" {
+  type        = string
+  default     = "gp3"
+  description = "Name of the gp3 StorageClass"
+}
+
+variable "gp3_default" {
+  type        = bool
+  default     = true
+  description = "Set gp3 as default StorageClass"
+}
+
+variable "gp3_provisioner" {
+  type        = string
+  default     = "ebs.csi.aws.com"
+  description = "CSI provisioner for EBS"
+}
+
+variable "gp3_volume_type" {
+  type        = string
+  default     = "gp3"
+  description = "EBS volume type for StorageClass"
+}
+
+variable "gp3_fs_type" {
+  type        = string
+  default     = "ext4"
+  description = "Filesystem type"
+}
+
+variable "gp3_reclaim_policy" {
+  type        = string
+  default     = "Delete"
+  description = "Reclaim policy for gp3 volumes"
+}
+
+variable "gp3_volume_binding_mode" {
+  type        = string
+  default     = "WaitForFirstConsumer"
+  description = "Volume binding mode"
+}
+
+variable "gp3_allow_volume_expansion" {
+  type        = bool
+  default     = true
+  description = "Indicates whether the storage class allow volume expand"
+}
+
+variable "gp3_encrypted" {
+  type        = bool
+  default     = true
+  description = "Indicates whether the gp3 storage class creates encrypted volumes"
 }
