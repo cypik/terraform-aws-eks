@@ -142,7 +142,7 @@ module "eks" {
   environment = local.environment
 
   # EKS
-  kubernetes_version     = "1.32"
+  kubernetes_version     = "1.34"
   endpoint_public_access = true
   # Networking
   vpc_id                            = module.vpc.vpc_id

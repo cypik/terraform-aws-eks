@@ -102,30 +102,19 @@ variable "nodes_additional_security_group_ids" {
 variable "addons" {
   type = list(object({
     addon_name               = string
-    addon_version            = string
-    resolve_conflicts        = string
+    addon_version            = optional(string)
+    resolve_conflicts        = optional(string)
     service_account_role_arn = optional(string)
   }))
   default = [
     {
-      addon_name        = "coredns"
-      addon_version     = "v1.11.4-eksbuild.2"
-      resolve_conflicts = "OVERWRITE"
+      addon_name = "coredns"
     },
     {
-      addon_name        = "kube-proxy"
-      addon_version     = "v1.31.7-eksbuild.7"
-      resolve_conflicts = "OVERWRITE"
+      addon_name = "kube-proxy"
     },
     {
-      addon_name        = "vpc-cni"
-      addon_version     = "v1.19.2-eksbuild.1"
-      resolve_conflicts = "OVERWRITE"
-    },
-    {
-      addon_name        = "aws-ebs-csi-driver"
-      addon_version     = "v1.43.0-eksbuild.1"
-      resolve_conflicts = "OVERWRITE"
+      addon_name = "vpc-cni"
     },
   ]
   description = "Manages [`aws_eks_addon`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_addon) resources."

@@ -150,3 +150,18 @@ YAML
     aws_eks_addon.cloudwatch_observability
   ]
 }
+
+resource "aws_eks_addon" "ebs_csi_driver" {
+  count = var.enabled ? 1 : 0
+
+  cluster_name  = aws_eks_cluster.default[0].name
+  addon_name    = "aws-ebs-csi-driver"
+  addon_version = null
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+
+  service_account_role_arn = aws_iam_role.ebs_csi_irsa_role[0].arn
+
+  tags = module.labels.tags
+}
