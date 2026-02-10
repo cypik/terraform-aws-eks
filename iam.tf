@@ -254,3 +254,56 @@ resource "aws_iam_role_policy_attachment" "fluentbit_logs_policy_attach" {
   policy_arn = aws_iam_policy.cloudwatch_logs_policy[0].arn
   role       = aws_iam_role.fluentbit_irsa_role[0].name
 }
+
+data "aws_iam_policy_document" "ebs_csi_assume_role" {
+  count = var.enabled && var.oidc_provider_enabled ? 1 : 0
+
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.default[0].arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.default[0].url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+    }
+  }
+}
+
+resource "aws_iam_role" "ebs_csi_irsa_role" {
+  count = var.enabled && var.oidc_provider_enabled ? 1 : 0
+
+  name               = "${module.labels.id}-ebs-csi-irsa"
+  assume_role_policy = data.aws_iam_policy_document.ebs_csi_assume_role[0].json
+  tags               = module.labels.tags
+}
+
+resource "aws_iam_role_policy_attachment" "ebs_csi_policy" {
+  count      = var.enabled && var.oidc_provider_enabled ? 1 : 0
+  role       = aws_iam_role.ebs_csi_irsa_role[0].name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+}
+
+resource "aws_iam_role_policy" "ebs_csi_extra" {
+  count = var.enabled && var.oidc_provider_enabled ? 1 : 0
+
+  role = aws_iam_role.ebs_csi_irsa_role[0].name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeAvailabilityZones"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
