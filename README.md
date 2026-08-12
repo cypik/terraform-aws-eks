@@ -21,7 +21,7 @@ To use this module, you can include it in your Terraform configuration. Here's a
 ```hcl
 module "eks" {
   source      = "cypik/eks/aws"
-  version     = "1.0.7"
+  version     = "1.0.8"
   enabled     = true
   name        = local.name
   environment = local.environment
@@ -93,7 +93,7 @@ module "eks" {
 ## eks with fargate
 module "eks" {
   source      = "cypik/eks/aws"
-  version     = "1.0.7"
+  version     = "1.0.8"
   enabled     = true
   name        = local.name
   environment = local.environment
@@ -193,24 +193,24 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14.3 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.82.2 |
-| <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | >= 2.3.7 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15.8 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.58.0 |
+| <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | >= 2.4.0 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.19.0 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 3.0.1 |
-| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.4 |
-| <a name="requirement_tls"></a> [tls](#requirement\_tls) | >= 4.1.0 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 3.2.1 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.3.0 |
+| <a name="requirement_tls"></a> [tls](#requirement\_tls) | >= 4.3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.82.2 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.58.0 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 1.19.0 |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 3.0.1 |
-| <a name="provider_kubernetes.eks"></a> [kubernetes.eks](#provider\_kubernetes.eks) | >= 3.0.1 |
-| <a name="provider_null"></a> [null](#provider\_null) | >= 3.2.4 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | >= 4.1.0 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 3.2.1 |
+| <a name="provider_kubernetes.eks"></a> [kubernetes.eks](#provider\_kubernetes.eks) | >= 3.2.1 |
+| <a name="provider_null"></a> [null](#provider\_null) | >= 3.3.0 |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | >= 4.3.0 |
 
 ## Modules
 
@@ -218,7 +218,7 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 |------|--------|---------|
 | <a name="module_eks_managed_node_group"></a> [eks\_managed\_node\_group](#module\_eks\_managed\_node\_group) | ./node_group/aws_managed | n/a |
 | <a name="module_fargate"></a> [fargate](#module\_fargate) | ./node_group/fargate_profile | n/a |
-| <a name="module_labels"></a> [labels](#module\_labels) | cypik/labels/aws | 1.0.2 |
+| <a name="module_labels"></a> [labels](#module\_labels) | cypik/labels/aws | 1.0.4 |
 
 ## Resources
 
@@ -335,7 +335,6 @@ This project is licensed under the **MIT** License - see the [LICENSE](https://g
 | <a name="input_public_access_cidrs"></a> [public\_access\_cidrs](#input\_public\_access\_cidrs) | Indicates which CIDR blocks can access the Amazon EKS public API server endpoint when enabled. EKS defaults this to a list with 0.0.0.0/0. | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_repository"></a> [repository](#input\_repository) | Terraform current module repo | `string` | `"https://github.com/cypik/terraform-aws-eks"` | no |
 | <a name="input_schedules"></a> [schedules](#input\_schedules) | Map of autoscaling group schedule to create | `map(any)` | `{}` | no |
-| <a name="input_storage_class"></a> [storage\_class](#input\_storage\_class) | Configuration for the storage class that defines how volumes are allocated in Kubernetes. | <pre>object({<br>    volume_binding_mode    = optional(string, "WaitForFirstConsumer")<br>    allow_volume_expansion = optional(bool, true)<br>  })</pre> | <pre>{<br>  "allow_volume_expansion": true,<br>  "volume_binding_mode": "WaitForFirstConsumer"<br>}</pre> | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | A list of subnet IDs to launch the cluster in. | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map(any)` | `{}` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC ID for the EKS cluster. | `string` | `""` | no |
