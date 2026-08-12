@@ -329,25 +329,6 @@ variable "enable_gp3_storage_class" {
   default     = true
   description = "Whether to create gp3 StorageClass"
 }
-variable "storage_class" {
-  type = object({
-    volume_binding_mode    = optional(string, "WaitForFirstConsumer")
-    allow_volume_expansion = optional(bool, true)
-  })
-
-  default = {
-    volume_binding_mode    = "WaitForFirstConsumer"
-    allow_volume_expansion = true
-  }
-
-  validation {
-    condition = (
-      contains(["WaitForFirstConsumer", "Immediate"], var.storage_class.volume_binding_mode)
-    )
-    error_message = "volume_binding_mode must be one of: 'WaitForFirstConsumer' or 'Immediate'."
-  }
-  description = "Configuration for the storage class that defines how volumes are allocated in Kubernetes."
-}
 
 variable "gp3_storage_class_name" {
   type        = string
